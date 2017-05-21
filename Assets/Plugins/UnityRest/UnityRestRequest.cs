@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+
 namespace UnityRest
 {
     public class UnityRestRequest
@@ -12,7 +13,7 @@ namespace UnityRest
         private string baseUrl;
         private string endpoint;
         private ObjectId id;
-        private string body;
+        private Dictionary<string,string> body;
         private HttpVerb verb;
         private ResponseParser responseHandler;
         private Action onResult;
@@ -29,7 +30,20 @@ namespace UnityRest
 
         public UnityRestRequest WithBody (string body)
         {
-            this.body = body;
+            body = body.Trim('{', '}');
+            string[] bodySplit = body.Split(',');
+            Dictionary<string,string> values = new Dictionary<string,string>();
+            for(int i =0; i<bodySplit.Length;i++)
+            {
+                string key = bodySplit[i].Split(':')[0];
+                string onevalue = bodySplit[i].Split(':')[1]; 
+                key = key.Replace('"',' ');
+                key = key.Trim();
+                onevalue=onevalue.Replace('"',' ');
+                onevalue=onevalue.Trim();
+                values.Add(key, onevalue);
+            }
+            this.body = values;
             return this;
         }
 
@@ -92,6 +106,7 @@ namespace UnityRest
 
         private UnityWebRequest BuildInternalRequest (string url)
         {
+           
             switch (verb)
             {
                 case HttpVerb.Get:

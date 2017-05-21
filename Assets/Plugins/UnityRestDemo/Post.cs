@@ -5,16 +5,18 @@ using System.ComponentModel;
 [Description ("posts")]
 public class Post 
 {
+	public string body;
 	public string userId;
 	public int id;
 	public string title;
-	public string body;
+	
 
-	public Post (string userId, string title, string body)
+	public Post (string userId, string title, string body, int id)
 	{
 		this.userId = userId;
 		this.title = title;
 		this.body = body;
+		this.id = id;
 	}
 
 	public override string ToString ()
